@@ -66,79 +66,23 @@ public class UpdateConsumer implements LongPollingSingleThreadUpdateConsumer {
 
     @SneakyThrows
     private void sendSchedule(Long chatId) {
-        String textFromFileSchedule = fileReader.readFileToString("textResources/Schedule.txt");
-
-        KeyboardButton backButton = new KeyboardButton("⬅ Назад");
-        KeyboardRow row = new KeyboardRow();
-        row.add(backButton);
-
-        List<KeyboardRow> keyboard = new ArrayList<>();
-        keyboard.add(row);
-
-        ReplyKeyboardMarkup keyboardMarkup = ReplyKeyboardMarkup.builder()
-                .keyboard(keyboard)
-                .resizeKeyboard(true)
-                .oneTimeKeyboard(true)
-                .build();
-
-        SendMessage sendMessage = SendMessage.builder()
-                .chatId(chatId)
-                .text(textFromFileSchedule)
-                .replyMarkup(keyboardMarkup)
-                .build();
-        telegramClient.execute(sendMessage);
+        String FILE_PATH_SCHEDULE = "textResources/Schedule.txt";
+        String textFromFileSchedule = fileReader.readFileToString(FILE_PATH_SCHEDULE);
+        backButtonHandler(chatId, textFromFileSchedule);
     }
 
     @SneakyThrows
     private void sendPrice(Long chatId) {
-        String textFromFilePrice = fileReader.readFileToString("textResources/Prices.txt");
-
-        KeyboardButton backButton = new KeyboardButton("⬅ Назад");
-        KeyboardRow row = new KeyboardRow();
-        row.add(backButton);
-
-        List<KeyboardRow> keyboard = new ArrayList<>();
-        keyboard.add(row);
-
-        ReplyKeyboardMarkup keyboardMarkup = ReplyKeyboardMarkup.builder()
-                .keyboard(keyboard)
-                .resizeKeyboard(true)
-                .oneTimeKeyboard(true)
-                .build();
-
-        SendMessage sendMessage = SendMessage.builder()
-                .chatId(chatId)
-                .text(textFromFilePrice)
-                .replyMarkup(keyboardMarkup)
-                .build();
-
-        telegramClient.execute(sendMessage);
+        String FILE_PATH_PRICE = "textResources/Prices.txt";
+        String textFromFilePrice = fileReader.readFileToString(FILE_PATH_PRICE);
+        backButtonHandler(chatId, textFromFilePrice);
     }
 
     @SneakyThrows
     private void sendDiscounts(Long chatId) {
-        String textFromFileDiscounts = fileReader.readFileToString("textResources/Discounts.txt");
-
-        KeyboardButton backButton = new KeyboardButton("⬅ Назад");
-        KeyboardRow row = new KeyboardRow();
-        row.add(backButton);
-
-        List<KeyboardRow> keyboard = new ArrayList<>();
-        keyboard.add(row);
-
-        ReplyKeyboardMarkup keyboardMarkup = ReplyKeyboardMarkup.builder()
-                .keyboard(keyboard)
-                .resizeKeyboard(true)
-                .oneTimeKeyboard(true)
-                .build();
-
-        SendMessage sendMessage = SendMessage.builder()
-                .chatId(chatId)
-                .text(textFromFileDiscounts)
-                .replyMarkup(keyboardMarkup)
-                .build();
-
-        telegramClient.execute(sendMessage);
+        String FILE_PATH_DISCOUNTS = "textResources/Discounts.txt";
+        String textFromFileDiscounts = fileReader.readFileToString(FILE_PATH_DISCOUNTS);
+        backButtonHandler(chatId, textFromFileDiscounts);
     }
 
     @SneakyThrows
@@ -181,6 +125,30 @@ public class UpdateConsumer implements LongPollingSingleThreadUpdateConsumer {
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup(buttons);
 
         sendMessage.setReplyMarkup(markup);
+        telegramClient.execute(sendMessage);
+    }
+
+    @SneakyThrows
+    private void backButtonHandler(Long chatId, String textFromFile) {
+        KeyboardButton backButton = new KeyboardButton("⬅ Назад");
+        KeyboardRow row = new KeyboardRow();
+        row.add(backButton);
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        keyboard.add(row);
+
+        ReplyKeyboardMarkup keyboardMarkup = ReplyKeyboardMarkup.builder()
+                .keyboard(keyboard)
+                .resizeKeyboard(true)
+                .oneTimeKeyboard(true)
+                .build();
+
+        SendMessage sendMessage = SendMessage.builder()
+                .chatId(chatId)
+                .text(textFromFile)
+                .replyMarkup(keyboardMarkup)
+                .build();
+
         telegramClient.execute(sendMessage);
     }
 }
