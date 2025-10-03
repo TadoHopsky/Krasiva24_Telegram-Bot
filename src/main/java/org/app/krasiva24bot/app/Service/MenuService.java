@@ -7,14 +7,10 @@ import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -81,25 +77,22 @@ public class MenuService {
     @SneakyThrows
     private void sendFileContent(Long chatId, String filePath) {
         String content = fileService.readFile(filePath);
-        messageService.sendMessage(chatId, content);
 
-        KeyboardButton backButton = new KeyboardButton("⬅ Назад");
-        KeyboardRow row = new KeyboardRow();
-        row.add(backButton);
-
-        List<KeyboardRow> keyboard = new ArrayList<>();
-        keyboard.add(row);
-
-        ReplyKeyboardMarkup keyboardMarkup = ReplyKeyboardMarkup.builder()
-                .keyboard(keyboard)
-                .resizeKeyboard(true)
-                .oneTimeKeyboard(true)
+        var backButton = InlineKeyboardButton.builder()
+                .text("⬅ В Главное Меню")
+                .callbackData("main_menu")
                 .build();
+
+        List<InlineKeyboardRow> buttons = List.of(
+                new InlineKeyboardRow(backButton)
+        );
+
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup(buttons);
 
         SendMessage sendMessage = SendMessage.builder()
                 .chatId(chatId)
                 .text(content)
-                .replyMarkup(keyboardMarkup)
+                .replyMarkup(markup)
                 .build();
 
         telegramClient.execute(sendMessage);
